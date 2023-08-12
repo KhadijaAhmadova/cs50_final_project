@@ -47,3 +47,11 @@ def register():
         connection.commit()
 
         return redirect("/")
+    
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.html")
+    else:
+        return redirect("/")
