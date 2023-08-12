@@ -1,0 +1,14 @@
+user registration
+logging in
+
+task creation, editing, deleting
+tasks will have name, description, due date, priority, completion status
+
+create a database and connect to it
+create database tables for users and for tasks
+
+flask routes for homepage (view of all tasks and new task creation), registration, login
+
+html templates for each view
+
+
