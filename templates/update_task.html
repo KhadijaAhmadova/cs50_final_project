@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}Update Task{% endblock %}
+
+{% block content %}
+<form action="{{ url_for('update_task') }}" method="post">
+    <label for="task">Task</label>
+    <input type="text" name="task" id="task" value="{{ task.task }}">
+    <br>
+    <label for="due">Due Date</label>
+    <input type="text" name="due" id="due" value="{{ task.due}}">
+    <br>
+    <select>
+        <option selected>{{ task.completion_status }}</option>
+        <option value="1">Not Started</option>
+        <option value="2">In Progress</option>
+        <option value="3">Done</option>
+    </select>
+    <br>
+    <select>
+        <option selected>{{ task.priority }}</option>
+        <option value="1">Low</option>
+        <option value="2">Medium</option>
+        <option value="3">High</option>
+    </select>
+        <br>
+        <label for="details">Details</label>
+        <input type="text" name="details" id="details" value="{{ task.details }}">
+        <br>
+    <button type="submit">Update</button>
+</form>
+{% endblock %}

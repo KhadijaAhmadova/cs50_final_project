@@ -130,3 +130,29 @@ def add_task():
         connection.close()
 
         return redirect("/")
+    
+
+@app.route("/update_task")
+@login_required
+def update_task():
+
+    connection = sqlite3.connection("database.db")
+    cursor = connection.cursor()
+
+    if request.method == "GET":
+        cursor.execute("SELECT * FROM tasks WHERE user_id = (?)", (session.get("user_id"),))
+        task = cursor.fetchone()
+        return render_template("update_task.html", task=task)
+    elif request.method == "POST":
+        task = request.form.get('task')
+        due = request.form.get('due')
+        completion_status = request.form.get('completion_status')
+        priority = request.form.get('priority')
+        details = request.form.get('details')
+        
+        cursor.execute("INSERT INTO tasks (task, due, completion_status, priority, details) VALUES (?, ?, ?, ?, ?)", task, due, completion_status, priority, details)
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        return redirect("/")
