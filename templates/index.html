@@ -9,7 +9,7 @@
             <tr>
                 <th>#</th>
                 <th>Task</th>
-                <th>Due Date</th>
+                <th>Due</th>
                 <th>Completion Status</th>
                 <th>Priority</th>
                 <th>Details</th>
@@ -20,7 +20,7 @@
                 <tr>
                     <td>{{ task.id }}</td>
                     <td>{{ task.task_name}}</td>
-                    <td>{{ task.due_date}}</td>
+                    <td>{{ task.due }}</td>
                     <td>{{ task.completion_status}}</td>
                     <td>{{ task.priority}}</td>
                     <td>{{ task.details}}</td>
@@ -28,4 +28,5 @@
             {% endfor %}
         </tbody>
     </table>
+    <a href="{{ url_for('add_task') }}">Add</a>
 {% endblock %}
