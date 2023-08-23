@@ -12,6 +12,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -58,11 +59,12 @@ def register():
         
         username = request.form.get("username")
         hash = generate_password_hash(request.form.get("password"))
-        cursor.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, hash)
+        cursor.execute("INSERT INTO users (username, hash) VALUES (?, ?)", (username, hash))
+
+        cursor.execute("SELECT id FROM users WHERE username = ?", username)
+        session["user_id"] = cursor.fetchone()[0]
+
         connection.commit()
-
-        session["user_id"] = rows[0]["id"]
-
         cursor.close()
         connection.close()
 
@@ -124,7 +126,7 @@ def add_task():
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
 
-        cursor.execute("INSERT INTO tasks (task, due, completion_status, priority, details) VALUES (?, ?, ?, ?, ?)", task, due, completion_status, priority, details)
+        cursor.execute("INSERT INTO tasks (task, due, completion_status, priority, details) VALUES (?, ?, ?, ?, ?)", (task, due, completion_status, priority, details))
         connection.commit()
         cursor.close()
         connection.close()
@@ -132,17 +134,18 @@ def add_task():
         return redirect("/")
     
 
-@app.route("/update_task")
+@app.route("/update_task/<int:task_id>", methods=["GET", "POST"])
 @login_required
-def update_task():
+def update_task(task_id):
 
-    connection = sqlite3.connection("database.db")
+    connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
 
     if request.method == "GET":
-        cursor.execute("SELECT * FROM tasks WHERE user_id = (?)", (session.get("user_id"),))
+        cursor.execute("SELECT * FROM tasks WHERE user_id = (?) AND id = (?)", (session.get("user_id"), task_id))
         task = cursor.fetchone()
         return render_template("update_task.html", task=task)
+    
     elif request.method == "POST":
         task = request.form.get('task')
         due = request.form.get('due')
@@ -150,9 +153,26 @@ def update_task():
         priority = request.form.get('priority')
         details = request.form.get('details')
         
-        cursor.execute("INSERT INTO tasks (task, due, completion_status, priority, details) VALUES (?, ?, ?, ?, ?)", task, due, completion_status, priority, details)
+        cursor.execute("UPDATE tasks SET task=?, due=?, completion_status=?, priority=?, details=? WHERE id=?", (task, due, completion_status, priority, details, task_id))
+
         connection.commit()
         cursor.close()
         connection.close()
 
         return redirect("/")
+    
+
+@app.route("/delete_task/<int:task_id>", methods=["POST"])
+@login_required
+def delete_task(task_id):
+
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+
+    cursor.execute("DELETE FROM tasks WHERE user_id = ? AND id = ?", (session.get("user_id"), task_id))
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+    return redirect("/")
