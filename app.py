@@ -25,6 +25,7 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
+
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM tasks WHERE user_id = (?)", (session.get("user_id"),))
@@ -61,7 +62,7 @@ def register():
         hash = generate_password_hash(request.form.get("password"))
         cursor.execute("INSERT INTO users (username, hash) VALUES (?, ?)", (username, hash))
 
-        cursor.execute("SELECT id FROM users WHERE username = ?", username)
+        cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
         session["user_id"] = cursor.fetchone()[0]
 
         connection.commit()
@@ -126,7 +127,7 @@ def add_task():
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
 
-        cursor.execute("INSERT INTO tasks (task, due, completion_status, priority, details) VALUES (?, ?, ?, ?, ?)", (task, due, completion_status, priority, details))
+        cursor.execute("INSERT INTO tasks (user_id, task, due, completion_status, priority, details) VALUES (?, ?, ?, ?, ?, ?)", (session.get("user_id"), task, due, completion_status, priority, details))
         connection.commit()
         cursor.close()
         connection.close()
