@@ -3,32 +3,34 @@
 {% block title %}Add Task{% endblock %}
 
 {% block content %}
-    <form action="/add_task" method="post">
-        <label for="task">Task</label>
-        <input type="text" name="task" id="task">
-        <br>
-        <label for="due">Due Date</label>
-        <input type="text" name="due" id="due">
-        <br>
-        <label for="completion_status">Completion Status</label>
-        <select name="completion_status">
-            <option selected></option>
-            <option value="Not Started">Not Started</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Done">Done</option>
-        </select>
-        <br>
-        <label for="priority">Priority</label>
-        <select name="priority">
-            <option selected></option>
-            <option value="Low">Low</option>
-            <option value="Medium">Medium</option>
-            <option value="High">High</option>
-        </select>
-        <br>
-        <label for="details">Details</label>
-        <input type="text" name="details" id="details">
-        <br>
-        <button type="submit">Add</button>
-    </form>
+    <div class="form-container">
+        <form action="/add_task" method="post">
+            <label class="label" for="task">Task</label>
+            <input class="input-field" type="text" name="task" id="task">
+            <br>
+            <label class="label" for="due">Due Date</label>
+            <input class="input-field" type="text" name="due" id="due">
+            <br>
+            <label class="label" for="completion_status">Completion Status</label>
+            <select class="input-field" name="completion_status">
+                <option selected></option>
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Done">Done</option>
+            </select>
+            <br>
+            <label class="label" for="priority">Priority</label>
+            <select class="input-field" name="priority">
+                <option selected></option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+            <br>
+            <label class="label" for="details">Details</label>
+            <input class="input-field" type="text" name="details" id="details">
+            <br>
+            <button class="btn btn-primary" type="submit">Add</button>
+        </form>
+    </div>
 {% endblock %}

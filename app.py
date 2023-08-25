@@ -43,7 +43,10 @@ def index():
         }
         tasks.append(task_dict) # appending dict for each task to the list of dictionaries
 
-    return render_template("index.html", tasks=tasks)
+        cursor.execute("SELECT username FROM users WHERE id = (?)", (session.get("user_id"),))
+        username = cursor.fetchone()[0]
+
+    return render_template("index.html", tasks=tasks, username=username)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -104,10 +107,10 @@ def login():
         
         cursor.execute("SELECT * FROM users WHERE username = (?)", (request.form.get("username"),))
         rows = cursor.fetchall()
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return apology("invalid username and/or password")
+        if not check_password_hash(rows[0][2], request.form.get("password")):
+            return apology("invalid password")
         
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = rows[0][0]
 
         cursor.close()
         connection.close()

@@ -3,8 +3,18 @@
 {% block title %}Tasks Manager{% endblock %}
 
 {% block content %}
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+        <a class="navbar-brand">{{ username }}</a>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+            <a class="nav-link" href="{{ url_for('logout') }}">Log out</a>
+            </div>
+        </div>
+        </div>
+    </nav>
     <h2>My Tasks</h2>
-    <table class="table table-hover table-bordered table-striped">
+    <table class="table table-striped">
         <thead class="thead-light">
             <tr>
                 <th>#</th>
@@ -24,7 +34,7 @@
                     <td>{{ task.completion_status}}</td>
                     <td>{{ task.priority}}</td>
                     <td>{{ task.details}}</td>
-                    <td><a href="{{ url_for('update_task', task_id=task.id) }}">Update</a></td>
+                    <td><a class="add-link" href="{{ url_for('update_task', task_id=task.id) }}">Update</a></td>
                     <td>
                         <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this task?');">
                             <button type="submit" class="btn btn-danger">Delete</button>
@@ -34,5 +44,5 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="/add_task">Add</a>
+    <a class="add-link" href="/add_task">Add</a>
 {% endblock %}
