@@ -28,8 +28,21 @@ def index():
 
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM tasks WHERE user_id = (?)", (session.get("user_id"),))
-    tasks = cursor.fetchall()
+    cursor.execute("SELECT id, task, due, completion_status, priority, details FROM tasks WHERE user_id = (?)", (session.get("user_id"),)) # cursor object
+    task_data = cursor.fetchall() # list of touples
+    tasks = [] # list of dictionaries
+
+    for task in task_data:
+        task_dict = {
+            "id" : task[0],
+            "task": task[1],
+            "due": task[2],
+            "completion_status": task[3],
+            "priority": task[4],
+            "details": task[5]
+        }
+        tasks.append(task_dict) # appending dict for each task to the list of dictionaries
+
     return render_template("index.html", tasks=tasks)
 
 
@@ -143,11 +156,23 @@ def update_task(task_id):
     cursor = connection.cursor()
 
     if request.method == "GET":
-        cursor.execute("SELECT * FROM tasks WHERE user_id = (?) AND id = (?)", (session.get("user_id"), task_id))
-        task = cursor.fetchone()
+
+        cursor.execute("SELECT id, task, due, completion_status, priority, details FROM tasks WHERE user_id = (?) AND id = (?)", (session.get("user_id"), task_id))
+        task_tuple = cursor.fetchone() # a tuple
+
+        task = {
+            "id" : task_tuple[0],
+            "task": task_tuple[1],
+            "due": task_tuple[2],
+            "completion_status": task_tuple[3],
+            "priority": task_tuple[4],
+            "details": task_tuple[5]
+        }
+
         return render_template("update_task.html", task=task)
     
     elif request.method == "POST":
+
         task = request.form.get('task')
         due = request.form.get('due')
         completion_status = request.form.get('completion_status')

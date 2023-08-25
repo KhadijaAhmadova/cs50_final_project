@@ -10,18 +10,20 @@
     <label for="due">Due Date</label>
     <input type="text" name="due" id="due" value="{{ task.due}}">
     <br>
-    <select>
+    <label for="completion_status">Completion Status</label>
+    <select name="completion_status">
         <option selected>{{ task.completion_status }}</option>
-        <option value="1">Not Started</option>
-        <option value="2">In Progress</option>
-        <option value="3">Done</option>
+        <option value="Not Started">Not Started</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Done">Done</option>
     </select>
     <br>
-    <select>
+    <label for="priority">Priority</label>
+    <select name="priority">
         <option selected>{{ task.priority }}</option>
-        <option value="1">Low</option>
-        <option value="2">Medium</option>
-        <option value="3">High</option>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
     </select>
         <br>
         <label for="details">Details</label>
