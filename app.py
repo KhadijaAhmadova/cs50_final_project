@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, session, url_for
 from flask_session import Session
-from helpers import apology, login_required
+from helpers import login_required
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -20,6 +20,11 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
+
+
+@app.route("/apology/<message>")
+def apology(message):
+    return render_template("apology.html", message=message)
 
 
 @app.route("/")
@@ -60,19 +65,19 @@ def register():
         return render_template("register.html") 
     elif request.method == "POST":
         if not request.form.get("username"):
-            return apology("must provide username")
+            return apology(message="must provide username")
         elif not request.form.get("password"):
-            return apology("must provide password")
+            return apology(message="must provide password")
         elif not request.form.get("confirmation"):
-            return apology("must re-enter password")
+            return apology(message="must re-enter password")
         elif request.form.get("password") != request.form.get("confirmation"):
-            return apology("passwords do not match")
+            return apology(message="passwords do not match")
         
         cursor.execute("SELECT * FROM users WHERE username = (?)", (request.form.get("username"),))
         rows = cursor.fetchall()
 
         if len(rows) != 0:
-            return apology("the username already exists")
+            return apology(message="the username already exists")
         
         username = request.form.get("username")
         hash = generate_password_hash(request.form.get("password"))
@@ -101,14 +106,14 @@ def login():
     
     elif request.method == "POST":
         if not request.form.get("username"):
-            return apology("must provide username")
+            return apology(message="must provide username")
         if not request.form.get("password"):
-            return apology("must provide password")
+            return apology(message="must provide password")
         
         cursor.execute("SELECT * FROM users WHERE username = (?)", (request.form.get("username"),))
         rows = cursor.fetchall()
         if not check_password_hash(rows[0][2], request.form.get("password")):
-            return apology("invalid password")
+            return apology(message="invalid password")
         
         session["user_id"] = rows[0][0]
 

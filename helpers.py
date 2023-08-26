@@ -1,9 +1,5 @@
-from flask import render_template, redirect, session
+from flask import redirect, session
 from functools import wraps
-
-
-def apology(message):
-    return render_template("apology.html", message=message)
 
 
 def login_required(f):
